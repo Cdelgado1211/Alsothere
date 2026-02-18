@@ -7,11 +7,11 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
 
 export const Input = ({ label, error, className = '', ...rest }: Props) => {
   return (
-    <label className="flex flex-col gap-1 text-sm text-slate-200">
+    <label className="flex flex-col gap-1 text-sm text-slate-700">
       {label && <span>{label}</span>}
       <input
-        className={`h-9 rounded-lg border bg-slate-900 px-3 text-sm text-slate-50 placeholder:text-slate-500 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 ${
-          error ? 'border-red-500' : 'border-slate-700'
+        className={`h-9 rounded-lg border bg-white px-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 ${
+          error ? 'border-red-500' : 'border-slate-300'
         } ${className}`}
         {...rest}
       />
@@ -19,4 +19,3 @@ export const Input = ({ label, error, className = '', ...rest }: Props) => {
     </label>
   );
 };
-

@@ -12,14 +12,14 @@ const navItems = [
 
 export const Sidebar = () => {
   return (
-    <aside className="flex w-64 flex-col border-r border-slate-200 bg-brand-600/95 p-4 text-white shadow-lg">
-      <div className="mb-8 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-xl font-bold text-brand-600">
-          AT
-        </div>
-        <div className="flex flex-col">
-          <span className="text-sm font-semibold tracking-wide">AlsoThere</span>
-          <span className="text-xs text-brand-100">Tech Partner 3.0</span>
+    <aside className="flex w-64 flex-col border-r border-slate-200 bg-brand-600 p-4 text-brand-50 shadow-lg">
+      <div className="mb-8 flex items-center justify-center">
+        <div className="flex items-center justify-center rounded-xl bg-white px-3 py-2 shadow-md">
+          <img
+            src="https://images.email-platform.com/venturestars/alsothere_logo.png"
+            alt="Also There"
+            className="h-7 w-auto"
+          />
         </div>
       </div>
       <nav className="flex-1 space-y-1 text-sm">

@@ -33,10 +33,17 @@ export const RegisterCompanyPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4">
-      <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900/80 p-6 shadow-card">
-        <h1 className="mb-2 text-lg font-semibold text-slate-50">Registrar empresa</h1>
-        <p className="mb-4 text-xs text-slate-400">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-brand-500/80 to-brand-600 px-4">
+      <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white/95 p-6 shadow-xl">
+        <div className="mb-3 flex justify-center">
+          <img
+            src="https://images.email-platform.com/venturestars/alsothere_logo.png"
+            alt="Also There"
+            className="h-8 w-auto"
+          />
+        </div>
+        <h1 className="mb-2 text-lg font-semibold text-slate-900">Registrar empresa</h1>
+        <p className="mb-4 text-xs text-slate-500">
           Crea una empresa demo. En un backend real se enviarían invitaciones y se
           configurarían tenants.
         </p>
@@ -57,8 +64,8 @@ export const RegisterCompanyPage = () => {
             Crear empresa
           </Button>
         </form>
-        <div className="mt-4 text-xs text-slate-400">
-          <Link to="/login" className="hover:text-slate-200">
+        <div className="mt-4 text-xs text-slate-500">
+          <Link to="/login" className="hover:text-slate-700">
             Ya tengo una cuenta
           </Link>
         </div>
@@ -66,4 +73,3 @@ export const RegisterCompanyPage = () => {
     </div>
   );
 };
-

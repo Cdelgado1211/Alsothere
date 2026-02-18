@@ -36,14 +36,16 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4">
-      <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900/80 p-6 shadow-card">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-brand-500/80 to-brand-600 px-4">
+      <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white/95 p-6 shadow-xl">
         <div className="mb-6 flex flex-col items-center gap-2 text-center">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-500 text-xl font-bold">
-            AT
-          </div>
-          <h1 className="text-lg font-semibold text-slate-50">Also There Admin</h1>
-          <p className="text-xs text-slate-400">
+          <img
+            src="https://images.email-platform.com/venturestars/alsothere_logo.png"
+            alt="Also There"
+            className="h-10 w-auto"
+          />
+          <h1 className="text-lg font-semibold text-slate-900">Also There Admin</h1>
+          <p className="text-xs text-slate-500">
             Inicia sesión para gestionar clientes, facturas y cuentas.
           </p>
         </div>
@@ -65,11 +67,11 @@ export const LoginPage = () => {
             Entrar
           </Button>
         </form>
-        <div className="mt-4 flex justify-between text-xs text-slate-400">
-          <Link to="/forgot-password" className="hover:text-slate-200">
+        <div className="mt-4 flex justify-between text-xs text-slate-500">
+          <Link to="/forgot-password" className="hover:text-slate-700">
             ¿Olvidaste tu contraseña?
           </Link>
-          <Link to="/register-company" className="hover:text-slate-200">
+          <Link to="/register-company" className="hover:text-slate-700">
             Registrar nueva empresa
           </Link>
         </div>
