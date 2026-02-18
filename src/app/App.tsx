@@ -6,8 +6,10 @@ import { AppLayout } from '../components/layout/AppLayout';
 import { DashboardPage } from '../features/dashboard/DashboardPage';
 import { ClientsListPage } from '../features/clients/ClientsListPage';
 import { ClientDetailPage } from '../features/clients/ClientDetailPage';
+import { ClientNewPage } from '../features/clients/ClientNewPage';
 import { VendorsListPage } from '../features/vendors/VendorsListPage';
 import { VendorDetailPage } from '../features/vendors/VendorDetailPage';
+import { VendorNewPage } from '../features/vendors/VendorNewPage';
 import { InvoicesListPage } from '../features/invoices/InvoicesListPage';
 import { InvoiceDetailPage } from '../features/invoices/InvoiceDetailPage';
 import { InvoiceNewPage } from '../features/invoices/InvoiceNewPage';
@@ -16,6 +18,7 @@ import { BillDetailPage } from '../features/bills/BillDetailPage';
 import { BillNewPage } from '../features/bills/BillNewPage';
 import { BankAccountsListPage } from '../features/bankAccounts/BankAccountsListPage';
 import { BankAccountDetailPage } from '../features/bankAccounts/BankAccountDetailPage';
+import { BankAccountNewPage } from '../features/bankAccounts/BankAccountNewPage';
 import { AuditLogPage } from '../features/audit/AuditLogPage';
 import { RequireAuth } from './RequireAuth';
 
@@ -37,8 +40,10 @@ const App = () => {
         <Route index element={<Navigate to="/app/dashboard" replace />} />
         <Route path="dashboard" element={<DashboardPage />} />
         <Route path="clients" element={<ClientsListPage />} />
+        <Route path="clients/new" element={<ClientNewPage />} />
         <Route path="clients/:id" element={<ClientDetailPage />} />
         <Route path="vendors" element={<VendorsListPage />} />
+        <Route path="vendors/new" element={<VendorNewPage />} />
         <Route path="vendors/:id" element={<VendorDetailPage />} />
         <Route path="invoices" element={<InvoicesListPage />} />
         <Route path="invoices/new" element={<InvoiceNewPage />} />
@@ -47,6 +52,7 @@ const App = () => {
         <Route path="bills/new" element={<BillNewPage />} />
         <Route path="bills/:id" element={<BillDetailPage />} />
         <Route path="bank-accounts" element={<BankAccountsListPage />} />
+        <Route path="bank-accounts/new" element={<BankAccountNewPage />} />
         <Route path="bank-accounts/:id" element={<BankAccountDetailPage />} />
         <Route path="audit" element={<AuditLogPage />} />
       </Route>
@@ -58,4 +64,3 @@ const App = () => {
 };
 
 export default App;
-

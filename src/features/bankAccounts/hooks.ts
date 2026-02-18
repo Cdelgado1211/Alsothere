@@ -1,6 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSessionStore } from '../../app/store/sessionStore';
 import { bankAccountService } from '../../services/bankAccountService';
+import type { BankAccount } from '../../types/bankAccounts';
 
 const keys = {
   all: (tenantId: string) => ['bankAccounts', tenantId] as const
@@ -16,3 +17,16 @@ export const useBankAccounts = () => {
   });
 };
 
+export const useCreateBankAccount = () => {
+  const session = useSessionStore((s) => s.session);
+  const queryClient = useQueryClient();
+  const tenantId = session?.tenantId as string;
+
+  return useMutation({
+    mutationFn: (payload: Omit<BankAccount, 'id' | 'companyId' | 'balance'>) =>
+      bankAccountService.create(tenantId, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: keys.all(tenantId) });
+    }
+  });
+};

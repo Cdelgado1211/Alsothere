@@ -20,8 +20,8 @@ export const BankAccountsListPage = () => {
           </p>
         </div>
         <Button as="button">
-          <Link to="#" className="text-xs">
-            Nueva cuenta (próximamente)
+          <Link to="/app/bank-accounts/new" className="text-xs">
+            Nueva cuenta
           </Link>
         </Button>
       </header>
@@ -66,4 +66,3 @@ export const BankAccountsListPage = () => {
     </div>
   );
 };
-

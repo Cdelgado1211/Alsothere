@@ -14,8 +14,25 @@ export const BillsListPage = () => {
   const { data, isLoading } = useBills();
   const [statusFilter, setStatusFilter] = useState<string>('all');
 
+  const statusLabel: Record<string, string> = {
+    pending: 'Pendiente',
+    overdue: 'Vencida',
+    paid: 'Pagada',
+    void: 'Anulada'
+  };
+
+  const resolveStatus = (status: string, dueDate: string) => {
+    const isOverdueStatus =
+      (status === 'pending' || status === 'overdue') && isPastDate(dueDate);
+    return isOverdueStatus ? 'overdue' : status;
+  };
+
   const filtered =
-    data?.filter((bill) => (statusFilter === 'all' ? true : bill.status === statusFilter)) ?? [];
+    data?.filter((bill) => {
+      const normalized = resolveStatus(bill.status, bill.dueDate);
+      if (statusFilter === 'all') return true;
+      return normalized === statusFilter;
+    }) ?? [];
 
   return (
     <div className="space-y-4">
@@ -33,18 +50,21 @@ export const BillsListPage = () => {
         </Button>
       </header>
       <Card>
-        <div className="mb-3 flex items-center justify-between text-xs text-slate-400">
-          <div className="flex gap-2">
+        <div className="mb-3 flex items-center justify-between text-xs text-slate-500">
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
+              Filtro
+            </span>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="h-8 rounded-lg border border-slate-700 bg-slate-900 px-2 text-xs text-slate-100 focus:border-brand-500 focus:outline-none"
+              className="h-8 rounded-full border border-slate-300 bg-white px-3 text-xs font-medium text-slate-700 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             >
               <option value="all">Todos los estatus</option>
-              <option value="pending">Pendiente</option>
-              <option value="overdue">Vencida</option>
-              <option value="paid">Pagada</option>
-              <option value="void">Anulada</option>
+              <option value="pending">{statusLabel.pending}</option>
+              <option value="overdue">{statusLabel.overdue}</option>
+              <option value="paid">{statusLabel.paid}</option>
+              <option value="void">{statusLabel.void}</option>
             </select>
           </div>
         </div>
@@ -68,10 +88,7 @@ export const BillsListPage = () => {
             </THead>
             <TBody>
               {filtered.map((bill) => {
-                const isOverdue =
-                  (bill.status === 'pending' || bill.status === 'overdue') &&
-                  isPastDate(bill.dueDate);
-                const displayStatus = isOverdue ? 'overdue' : bill.status;
+                const displayStatus = resolveStatus(bill.status, bill.dueDate);
                 return (
                   <TR key={bill.id}>
                     <TD>
@@ -95,7 +112,7 @@ export const BillsListPage = () => {
                             : 'default'
                         }
                       >
-                        {displayStatus}
+                        {statusLabel[displayStatus] ?? displayStatus}
                       </Badge>
                     </TD>
                   </TR>
@@ -108,4 +125,3 @@ export const BillsListPage = () => {
     </div>
   );
 };
-

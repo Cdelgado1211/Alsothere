@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { useSessionStore } from '../../app/store/sessionStore';
 import { invoiceService } from '../../services/invoiceService';
@@ -15,6 +15,7 @@ import { Select } from '../../components/ui/Select';
 export const InvoiceDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const session = useSessionStore((s) => s.session);
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState<string>('');
 
@@ -22,6 +23,14 @@ export const InvoiceDetailPage = () => {
 
   const invoice = invoiceService.get(session.tenantId, id);
   const accounts = bankAccountService.list(session.tenantId);
+
+  const statusLabel: Record<string, string> = {
+    draft: 'Borrador',
+    issued: 'Emitida',
+    overdue: 'Vencida',
+    paid: 'Pagada',
+    void: 'Anulada'
+  };
 
   if (!invoice) {
     return <p className="text-sm text-slate-400">Factura no encontrada.</p>;
@@ -36,13 +45,23 @@ export const InvoiceDetailPage = () => {
   return (
     <div className="space-y-4">
       <header className="flex items-center justify-between">
-        <div>
-          <h1 className="text-lg font-semibold text-slate-50">
+        <div className="flex items-center gap-3">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate('/app/invoices')}
+          >
+            ← Volver a facturas
+          </Button>
+          <div>
+            <h1 className="text-lg font-semibold text-slate-50">
             {invoice.invoiceNumber} · {formatCurrency(invoice.total)}
           </h1>
           <p className="text-xs text-slate-400">
             Factura de venta emitida el {formatDate(invoice.issueDate)}.
           </p>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <Badge
@@ -54,7 +73,7 @@ export const InvoiceDetailPage = () => {
                 : 'default'
             }
           >
-            {invoice.status}
+            {statusLabel[invoice.status] ?? invoice.status}
           </Badge>
           {invoice.status !== 'paid' && invoice.status !== 'void' && (
             <Button size="sm" onClick={() => setOpen(true)}>
@@ -65,7 +84,7 @@ export const InvoiceDetailPage = () => {
       </header>
       <div className="grid gap-4 lg:grid-cols-3">
         <Card title="Resumen">
-          <dl className="grid grid-cols-2 gap-2 text-xs text-slate-300">
+          <dl className="grid grid-cols-2 gap-2 text-xs text-slate-700">
             <dt className="text-slate-500">Emisión</dt>
             <dd>{formatDate(invoice.issueDate)}</dd>
             <dt className="text-slate-500">Vencimiento</dt>
@@ -130,4 +149,3 @@ export const InvoiceDetailPage = () => {
     </div>
   );
 };
-

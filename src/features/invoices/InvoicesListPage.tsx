@@ -14,8 +14,26 @@ export const InvoicesListPage = () => {
   const { data, isLoading } = useInvoices();
   const [statusFilter, setStatusFilter] = useState<string>('all');
 
+  const statusLabel: Record<string, string> = {
+    draft: 'Borrador',
+    issued: 'Emitida',
+    overdue: 'Vencida',
+    paid: 'Pagada',
+    void: 'Anulada'
+  };
+
+  const resolveStatus = (status: string, dueDate: string) => {
+    const isOverdueStatus =
+      (status === 'issued' || status === 'overdue') && isPastDate(dueDate);
+    return isOverdueStatus ? 'overdue' : status;
+  };
+
   const filtered =
-    data?.filter((inv) => (statusFilter === 'all' ? true : inv.status === statusFilter)) ?? [];
+    data?.filter((inv) => {
+      const normalized = resolveStatus(inv.status, inv.dueDate);
+      if (statusFilter === 'all') return true;
+      return normalized === statusFilter;
+    }) ?? [];
 
   return (
     <div className="space-y-4">
@@ -33,19 +51,22 @@ export const InvoicesListPage = () => {
         </Button>
       </header>
       <Card>
-        <div className="mb-3 flex items-center justify-between text-xs text-slate-400">
-          <div className="flex gap-2">
+        <div className="mb-3 flex items-center justify-between text-xs text-slate-500">
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
+              Filtro
+            </span>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="h-8 rounded-lg border border-slate-700 bg-slate-900 px-2 text-xs text-slate-100 focus:border-brand-500 focus:outline-none"
+              className="h-8 rounded-full border border-slate-300 bg-white px-3 text-xs font-medium text-slate-700 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             >
               <option value="all">Todos los estatus</option>
-              <option value="draft">Borrador</option>
-              <option value="issued">Emitida</option>
-              <option value="overdue">Vencida</option>
-              <option value="paid">Pagada</option>
-              <option value="void">Anulada</option>
+              <option value="draft">{statusLabel.draft}</option>
+              <option value="issued">{statusLabel.issued}</option>
+              <option value="overdue">{statusLabel.overdue}</option>
+              <option value="paid">{statusLabel.paid}</option>
+              <option value="void">{statusLabel.void}</option>
             </select>
           </div>
         </div>
@@ -69,10 +90,7 @@ export const InvoicesListPage = () => {
             </THead>
             <TBody>
               {filtered.map((inv) => {
-                const isOverdue =
-                  (inv.status === 'issued' || inv.status === 'overdue') &&
-                  isPastDate(inv.dueDate);
-                const displayStatus = isOverdue ? 'overdue' : inv.status;
+                const displayStatus = resolveStatus(inv.status, inv.dueDate);
                 return (
                   <TR key={inv.id}>
                     <TD>
@@ -96,7 +114,7 @@ export const InvoicesListPage = () => {
                             : 'default'
                         }
                       >
-                        {displayStatus}
+                        {statusLabel[displayStatus] ?? displayStatus}
                       </Badge>
                     </TD>
                   </TR>
@@ -109,4 +127,3 @@ export const InvoicesListPage = () => {
     </div>
   );
 };
-

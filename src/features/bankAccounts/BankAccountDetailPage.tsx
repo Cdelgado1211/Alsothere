@@ -1,14 +1,16 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useSessionStore } from '../../app/store/sessionStore';
 import { bankAccountService } from '../../services/bankAccountService';
 import { Card } from '../../components/ui/Card';
 import { formatCurrency } from '../../lib/currency';
 import { Table, THead, TBody, TR, TH, TD } from '../../components/ui/Table';
 import { formatDate } from '../../lib/dates';
+import { Button } from '../../components/ui/Button';
 
 export const BankAccountDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const session = useSessionStore((s) => s.session);
+  const navigate = useNavigate();
 
   if (!session || !id) return null;
 
@@ -21,12 +23,24 @@ export const BankAccountDetailPage = () => {
 
   return (
     <div className="space-y-4">
-      <header>
-        <h1 className="text-lg font-semibold text-slate-50">{account.name}</h1>
-        <p className="text-xs text-slate-400">
-          Saldo actual {formatCurrency(account.balance)} · {account.bankName}{' '}
-          {account.accountNumber}
-        </p>
+      <header className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate('/app/bank-accounts')}
+          >
+            ← Volver a cuentas bancarias
+          </Button>
+          <div>
+            <h1 className="text-lg font-semibold text-slate-50">{account.name}</h1>
+            <p className="text-xs text-slate-400">
+              Saldo actual {formatCurrency(account.balance)} · {account.bankName}{' '}
+              {account.accountNumber}
+            </p>
+          </div>
+        </div>
       </header>
       <Card title="Movimientos">
         {movements.length === 0 ? (
@@ -61,4 +75,3 @@ export const BankAccountDetailPage = () => {
     </div>
   );
 };
-

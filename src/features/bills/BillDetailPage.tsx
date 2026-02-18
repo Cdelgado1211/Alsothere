@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { useSessionStore } from '../../app/store/sessionStore';
 import { billService } from '../../services/billService';
@@ -14,6 +14,7 @@ import { Select } from '../../components/ui/Select';
 export const BillDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const session = useSessionStore((s) => s.session);
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState<string>('');
 
@@ -21,6 +22,13 @@ export const BillDetailPage = () => {
 
   const bill = billService.get(session.tenantId, id);
   const accounts = bankAccountService.list(session.tenantId);
+
+  const statusLabel: Record<string, string> = {
+    pending: 'Pendiente',
+    overdue: 'Vencida',
+    paid: 'Pagada',
+    void: 'Anulada'
+  };
 
   if (!bill) {
     return <p className="text-sm text-slate-400">Factura proveedor no encontrada.</p>;
@@ -35,13 +43,23 @@ export const BillDetailPage = () => {
   return (
     <div className="space-y-4">
       <header className="flex items-center justify-between">
-        <div>
-          <h1 className="text-lg font-semibold text-slate-50">
-            {bill.vendorInvoiceNumber} · {formatCurrency(bill.total)}
-          </h1>
-          <p className="text-xs text-slate-400">
-            Factura de proveedor emitida el {formatDate(bill.issueDate)}.
-          </p>
+        <div className="flex items-center gap-3">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate('/app/bills')}
+          >
+            ← Volver a facturas proveedor
+          </Button>
+          <div>
+            <h1 className="text-lg font-semibold text-slate-50">
+              {bill.vendorInvoiceNumber} · {formatCurrency(bill.total)}
+            </h1>
+            <p className="text-xs text-slate-400">
+              Factura de proveedor emitida el {formatDate(bill.issueDate)}.
+            </p>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <Badge
@@ -53,7 +71,7 @@ export const BillDetailPage = () => {
                 : 'default'
             }
           >
-            {bill.status}
+            {statusLabel[bill.status] ?? bill.status}
           </Badge>
           {bill.status !== 'paid' && bill.status !== 'void' && (
             <Button size="sm" onClick={() => setOpen(true)}>
@@ -63,7 +81,7 @@ export const BillDetailPage = () => {
         </div>
       </header>
       <Card title="Detalle">
-        <dl className="grid grid-cols-2 gap-2 text-xs text-slate-300">
+        <dl className="grid grid-cols-2 gap-2 text-xs text-slate-700">
           <dt className="text-slate-500">Emisión</dt>
           <dd>{formatDate(bill.issueDate)}</dd>
           <dt className="text-slate-500">Vencimiento</dt>
@@ -99,4 +117,3 @@ export const BillDetailPage = () => {
     </div>
   );
 };
-
