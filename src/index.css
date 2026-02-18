@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Azul corporativo tipo Also There */
+  --color-brand-50: 239 246 255;
+  --color-brand-100: 219 234 254;
+  --color-brand-200: 191 219 254;
+  --color-brand-300: 147 197 253;
+  --color-brand-400: 59 130 246;
+  --color-brand-500: 14 116 190; /* azul principal botones/header */
+  --color-brand-600: 8 86 155;
+  --color-brand-700: 7 71 130;
+  --color-brand-800: 15 23 42;
+  --color-brand-900: 15 23 42;
+  --color-surface: 255 255 255;
+  --color-surface-alt: 243 244 246;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 antialiased;
+}
+
+.app-scrollbar {
+  scrollbar-width: thin;
+}
+
+.app-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.app-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(148, 163, 184, 0.6);
+  border-radius: 9999px;
+}
