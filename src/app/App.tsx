@@ -21,6 +21,7 @@ import { BankAccountDetailPage } from '../features/bankAccounts/BankAccountDetai
 import { BankAccountNewPage } from '../features/bankAccounts/BankAccountNewPage';
 import { AuditLogPage } from '../features/audit/AuditLogPage';
 import { RequireAuth } from './RequireAuth';
+import { TasksListPage } from '../features/tasks/TasksListPage';
 
 const App = () => {
   return (
@@ -55,6 +56,7 @@ const App = () => {
         <Route path="bank-accounts/new" element={<BankAccountNewPage />} />
         <Route path="bank-accounts/:id" element={<BankAccountDetailPage />} />
         <Route path="audit" element={<AuditLogPage />} />
+        <Route path="tasks" element={<TasksListPage />} />
       </Route>
 
       <Route path="/" element={<Navigate to="/app/dashboard" replace />} />

@@ -6,9 +6,37 @@ import { Table, THead, TBody, TR, TH, TD } from '../../components/ui/Table';
 import { Spinner } from '../../components/ui/Spinner';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { formatCurrency } from '../../lib/currency';
+import { useSessionStore } from '../../app/store/sessionStore';
+import type { BankAccount } from '../../types/bankAccounts';
+
+const currencyByCountry: Record<string, string> = {
+  mx: 'MXN',
+  cl: 'CLP',
+  es: 'EUR',
+  ar: 'ARS',
+  co: 'COP',
+  ve: 'VES'
+};
 
 export const BankAccountsListPage = () => {
   const { data, isLoading } = useBankAccounts();
+  const country = useSessionStore((s) => s.country);
+
+  const getDisplayCurrency = (accountCurrency: string) => {
+    if (accountCurrency === 'USD') return 'USD';
+    return currencyByCountry[country] ?? accountCurrency;
+  };
+
+  const getDisplayName = (account: BankAccount) => {
+    if (account.currency === 'USD') return account.name;
+    const displayCurrency = getDisplayCurrency(account.currency);
+    const parts = account.name.split(' ');
+    if (parts.length >= 3 && parts[0] === 'Cuenta') {
+      const suffix = parts.slice(2).join(' ');
+      return `Cuenta ${displayCurrency} ${suffix}`.trim();
+    }
+    return account.name;
+  };
 
   return (
     <div className="space-y-4">
@@ -51,12 +79,12 @@ export const BankAccountsListPage = () => {
                       to={`/app/bank-accounts/${acc.id}`}
                       className="text-sm text-brand-300 hover:text-brand-200"
                     >
-                      {acc.name}
+                      {getDisplayName(acc)}
                     </Link>
                   </TD>
                   <TD>{acc.bankName}</TD>
                   <TD>{acc.accountNumber}</TD>
-                  <TD>{formatCurrency(acc.balance)}</TD>
+                  <TD>{formatCurrency(acc.balance, getDisplayCurrency(acc.currency))}</TD>
                 </TR>
               ))}
             </TBody>

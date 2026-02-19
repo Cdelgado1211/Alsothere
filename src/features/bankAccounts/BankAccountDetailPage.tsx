@@ -10,12 +10,36 @@ import { Button } from '../../components/ui/Button';
 export const BankAccountDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const session = useSessionStore((s) => s.session);
+  const country = useSessionStore((s) => s.country);
   const navigate = useNavigate();
 
   if (!session || !id) return null;
 
   const account = bankAccountService.get(session.tenantId, id);
   const movements = bankAccountService.listMovements(session.tenantId, id);
+
+  const currencyByCountry: Record<string, string> = {
+    mx: 'MXN',
+    cl: 'CLP',
+    es: 'EUR',
+    ar: 'ARS',
+    co: 'COP',
+    ve: 'VES'
+  };
+
+  const displayCurrency =
+    account?.currency === 'USD' ? 'USD' : currencyByCountry[country] ?? account?.currency ?? 'USD';
+
+  const getDisplayName = () => {
+    if (!account) return '';
+    if (account.currency === 'USD') return account.name;
+    const parts = account.name.split(' ');
+    if (parts.length >= 3 && parts[0] === 'Cuenta') {
+      const suffix = parts.slice(2).join(' ');
+      return `Cuenta ${displayCurrency} ${suffix}`.trim();
+    }
+    return account.name;
+  };
 
   if (!account) {
     return <p className="text-sm text-slate-400">Cuenta bancaria no encontrada.</p>;
@@ -34,9 +58,9 @@ export const BankAccountDetailPage = () => {
             ← Volver a cuentas bancarias
           </Button>
           <div>
-            <h1 className="text-lg font-semibold text-slate-50">{account.name}</h1>
+            <h1 className="text-lg font-semibold text-slate-50">{getDisplayName()}</h1>
             <p className="text-xs text-slate-400">
-              Saldo actual {formatCurrency(account.balance)} · {account.bankName}{' '}
+              Saldo actual {formatCurrency(account.balance, displayCurrency)} · {account.bankName}{' '}
               {account.accountNumber}
             </p>
           </div>
@@ -58,14 +82,14 @@ export const BankAccountDetailPage = () => {
             </THead>
             <TBody>
               {movements.map((m) => (
-                <TR key={m.id}>
-                  <TD>{formatDate(m.date)}</TD>
-                  <TD>{m.type === 'income' ? 'Ingreso' : 'Egreso'}</TD>
-                  <TD>
-                    {m.referenceType} · {m.referenceId}
-                  </TD>
-                  <TD>{formatCurrency(m.amount)}</TD>
-                  <TD>{formatCurrency(m.resultingBalance)}</TD>
+              <TR key={m.id}>
+                <TD>{formatDate(m.date)}</TD>
+                <TD>{m.type === 'income' ? 'Ingreso' : 'Egreso'}</TD>
+                <TD>
+                  {m.referenceType} · {m.referenceId}
+                </TD>
+                  <TD>{formatCurrency(m.amount, displayCurrency)}</TD>
+                  <TD>{formatCurrency(m.resultingBalance, displayCurrency)}</TD>
                 </TR>
               ))}
             </TBody>

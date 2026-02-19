@@ -4,6 +4,7 @@ import type { Invoice } from '../types/invoices';
 import type { Bill } from '../types/bills';
 import type { BankAccount, BankMovement } from '../types/bankAccounts';
 import type { AuditLogEntry } from '../types/audit';
+import type { Task } from '../types/tasks';
 import { calculateInvoiceTotals, generateInvoiceNumber } from '../lib/invoice';
 import { generateId } from '../lib/id';
 
@@ -15,6 +16,7 @@ interface CompanyData {
   bankAccounts: BankAccount[];
   movements: BankMovement[];
   audit: AuditLogEntry[];
+  tasks: Task[];
   invoiceSequence: number;
 }
 
@@ -27,7 +29,8 @@ const addDays = (days: number) => {
 };
 
 const createSeedCompany = (companyId: string, name: string): CompanyData => {
-  const bankAccountId = generateId();
+  const bankAccountUsdId = generateId();
+  const bankAccountMxnId = generateId();
   const clientId = generateId();
   const vendorId = generateId();
 
@@ -150,13 +153,22 @@ const createSeedCompany = (companyId: string, name: string): CompanyData => {
   // Seed de movimientos bancarios de ejemplo
   const bankAccounts: BankAccount[] = [
     {
-      id: bankAccountId,
+      id: bankAccountUsdId,
       companyId,
-      name: `Cuenta Principal ${name}`,
+      name: `Cuenta USD ${name}`,
       bankName: 'Banco Ejemplo',
       accountNumber: '1234567890',
       currency: 'USD',
       balance: 0 // se actualizará con los movimientos
+    },
+    {
+      id: bankAccountMxnId,
+      companyId,
+      name: `Cuenta MXN ${name}`,
+      bankName: 'Banco Ejemplo MXN',
+      accountNumber: '9876543210',
+      currency: 'MXN',
+      balance: 250000
     }
   ];
 
@@ -167,7 +179,7 @@ const createSeedCompany = (companyId: string, name: string): CompanyData => {
   movements.push({
     id: generateId(),
     companyId,
-    bankAccountId,
+    bankAccountId: bankAccountUsdId,
     date: addDays(-30),
     type: 'income',
     referenceType: 'customerInvoice',
@@ -182,7 +194,7 @@ const createSeedCompany = (companyId: string, name: string): CompanyData => {
   movements.push({
     id: generateId(),
     companyId,
-    bankAccountId,
+    bankAccountId: bankAccountUsdId,
     date: paidInvoice.issueDate,
     type: 'income',
     referenceType: 'customerInvoice',
@@ -197,7 +209,7 @@ const createSeedCompany = (companyId: string, name: string): CompanyData => {
   movements.push({
     id: generateId(),
     companyId,
-    bankAccountId,
+    bankAccountId: bankAccountUsdId,
     date: paidBill.issueDate,
     type: 'expense',
     referenceType: 'vendorBill',
@@ -265,6 +277,34 @@ const createSeedCompany = (companyId: string, name: string): CompanyData => {
     });
   });
 
+  const tasks: Task[] = [
+    {
+      id: generateId(),
+      companyId,
+      title: 'Registrarse como proveedor en aseguradora MX',
+      description:
+        'Completar alta como proveedor en aseguradora mexicana, incluyendo contratos, KYC y pruebas de integración.',
+      category: 'onboarding',
+      country: 'México',
+      status: 'in_progress',
+      createdAt: todayIso(),
+      dueDate: addDays(14)
+    },
+    {
+      id: generateId(),
+      companyId,
+      title: 'Enviar transferencia a EE.UU.',
+      description:
+        'Preparar transferencia internacional desde la cuenta USD hacia Estados Unidos, validando saldos y tipo de cambio.',
+      category: 'banking',
+      country: 'Estados Unidos',
+      relatedAccountId: bankAccountUsdId,
+      status: 'pending',
+      createdAt: todayIso(),
+      dueDate: addDays(7)
+    }
+  ];
+
   return {
     clients: [
       {
@@ -297,6 +337,7 @@ const createSeedCompany = (companyId: string, name: string): CompanyData => {
     bankAccounts,
     movements,
     audit,
+    tasks,
     invoiceSequence: invoices.length
   };
 };

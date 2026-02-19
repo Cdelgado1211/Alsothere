@@ -5,9 +5,11 @@ import type { Tenant } from '../../types/tenants';
 interface SessionState {
   session: Session | null;
   tenants: Tenant[];
+  country: 'mx' | 'cl' | 'es' | 'ar' | 'co' | 've';
   setSession: (session: Session | null) => void;
   setTenants: (tenants: Tenant[]) => void;
   switchTenant: (tenantId: string) => void;
+  setCountry: (country: SessionState['country']) => void;
 }
 
 export const useSessionStore = create<SessionState>((set, get) => ({
@@ -16,6 +18,7 @@ export const useSessionStore = create<SessionState>((set, get) => ({
     { id: 'tenant-1', name: 'Also There Alpha' },
     { id: 'tenant-2', name: 'Also There Beta' }
   ],
+  country: 'mx',
   setSession: (session) => set({ session }),
   setTenants: (tenants) => set({ tenants }),
   switchTenant: (tenantId) => {
@@ -26,6 +29,9 @@ export const useSessionStore = create<SessionState>((set, get) => ({
     set({
       session: { ...session, tenantId: tenant.id, companyName: tenant.name }
     });
+  },
+  setCountry: (country) => {
+    set({ country });
   }
 }));
 
@@ -42,4 +48,3 @@ export const mockLogin = (email: string): Session => {
     companyName: 'Also There Alpha'
   };
 };
-

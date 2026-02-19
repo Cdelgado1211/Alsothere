@@ -6,7 +6,8 @@ const navItems = [
   { to: '/app/vendors', label: 'Proveedores' },
   { to: '/app/invoices', label: 'Facturas (Ventas)' },
   { to: '/app/bills', label: 'Facturas Proveedor' },
-  { to: '/app/bank-accounts', label: 'Cuentas Bancarias' },
+  { to: '/app/bank-accounts', label: 'Saldos Bancarios' },
+  { to: '/app/tasks', label: 'Tareas' },
   { to: '/app/audit', label: 'Auditoría' }
 ];
 
