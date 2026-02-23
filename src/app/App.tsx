@@ -22,6 +22,9 @@ import { BankAccountNewPage } from '../features/bankAccounts/BankAccountNewPage'
 import { AuditLogPage } from '../features/audit/AuditLogPage';
 import { RequireAuth } from './RequireAuth';
 import { TasksListPage } from '../features/tasks/TasksListPage';
+import { ReportsHomePage } from '../features/reports/ReportsHomePage';
+import { ProfitLossReportPage } from '../features/reports/ProfitLossReportPage';
+import { BalanceSheetReportPage } from '../features/reports/BalanceSheetReportPage';
 
 const App = () => {
   return (
@@ -57,6 +60,9 @@ const App = () => {
         <Route path="bank-accounts/:id" element={<BankAccountDetailPage />} />
         <Route path="audit" element={<AuditLogPage />} />
         <Route path="tasks" element={<TasksListPage />} />
+        <Route path="reports" element={<ReportsHomePage />} />
+        <Route path="reports/profit-loss" element={<ProfitLossReportPage />} />
+        <Route path="reports/balance-sheet" element={<BalanceSheetReportPage />} />
       </Route>
 
       <Route path="/" element={<Navigate to="/app/dashboard" replace />} />
